@@ -1,1 +1,72 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lead Time - Analisi prenotazioni</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <p class="brand">Bringo - Dashboard</p>
+      <p class="small">Lezione / appunti</p>
+
+      <nav class="toc">
+        <a href="#intro">Introduzione</a>
+        <a href="#definizioni">Definizioni</a>
+        <a href="#statistiche">Statistiche mensili</a>
+        <a href="#quantili">50% e 75% prenotazioni</a>
+        <a href="#app">Dashboard Shiny</a>
+      </nav>
+
+      <p class="small" style="margin-top:18px;">
+        <a href="../index.html">Torna alla home</a>
+      </p>
+    </aside>
+
+    <main class="content">
+      <h1 id="intro">Lead time: quanto prima prenotano</h1>
+
+      <div class="note">
+        Obiettivo: stimare per mese il lead time medio e i giorni necessari a coprire il 50% e il 75% delle prenotazioni.
+      </div>
+
+      <h2 id="definizioni">Definizioni</h2>
+      <p>lead.time = giorni prima dell'inizio noleggio in cui il cliente ha effettuato la prenotazione.</p>
+
+      <h2 id="statistiche">Statistiche mensili</h2>
+      <pre><code>library(dplyr)
+library(lubridate)
+
+bringo_stat <- bringo |>
+  mutate(mese = month(Data.Inizio, label = TRUE, abbr = FALSE)) |>
+  group_by(mese) |>
+  summarise(
+    lead_time_medio = mean(lead.time, na.rm = TRUE),
+    n_prenotazioni = n()
+  )</code></pre>
+
+      <h2 id="quantili">50% e 75% prenotazioni</h2>
+      <pre><code>bringo_stat <- bringo |>
+  mutate(mese = month(Data.Inizio, label = TRUE, abbr = FALSE)) |>
+  group_by(mese) |>
+  summarise(
+    lead_time_medio = mean(lead.time, na.rm = TRUE),
+    giorni_50_percento = quantile(lead.time, 0.50, na.rm = TRUE),
+    giorni_75_percento = quantile(lead.time, 0.75, na.rm = TRUE),
+    n_prenotazioni = n()
+  )</code></pre>
+
+      <h2 id="app">Dashboard Shiny</h2>
+      <p>Qui sotto la app (se l'embed è permesso). In alternativa metto un link diretto.</p>
+
+      <!-- SOSTITUISCI con l'URL della tua app -->
+      <p><a href="https://TUOACCOUNT.shinyapps.io/NOMEAPP/" target="_blank">Apri la dashboard in una nuova scheda</a></p>
+
+      <iframe class="embed" src="https://TUOACCOUNT.shinyapps.io/NOMEAPP/"></iframe>
+    </main>
+  </div>
+</body>
+</html>
 
